@@ -11,6 +11,8 @@ mysqldump -u root scott \
     --debug-info 2> /var/lib/mysql/mysqldump.log > mysqldump.sql 
 ```
 
+No he encontrado forma de hacer analisis previo del espacio.
+
 ![ ](img/401.png)
 
 **Importar**
