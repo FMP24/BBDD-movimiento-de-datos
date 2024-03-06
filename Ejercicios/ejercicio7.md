@@ -97,11 +97,11 @@ INFILE 'actors.csv'
 BADFILE 'actors.bad'
 DISCARDFILE 'actors.dsc'
 APPEND INTO TABLE actors
-FIELDS TERMINATED BY ',' TRAILING NULLCOLS
+FIELDS TERMINATED BY ','
 (
-actor_id
-first_name
-last_name
+actor_id,
+first_name,
+last_name,
 last_update
 )
 ```
@@ -110,8 +110,8 @@ last_update
 **BADFILE:** fichero en el que se colocan los registros rechazados.
 **DISCARDFILE:** fichero en el que se colocan los registros descartados.
 
-Podemos hacer un script en bash para generar cada uno de estos archivos de control
-(se que el codigo es muy poco eficiente, pero no me sale de otra manera)
+Podemos hacer un script en bash para generar cada uno de estos archivos de control, utilizando el archivo de columnas y el archivo de tablas que hemos recogido antes.
+(se que el codigo es terrible, pero no me sale de otra manera)
 ```
 #!/bin/bash
 export IFS=$(echo -en "\n\b")
@@ -123,22 +123,50 @@ for tabla in $(cat tablas.csv); do
     echo "BADFILE '$tabla.bad'" >> "$output"
     echo "DISCARDFILE '$tabla.dsc'" >> "$output"
     echo "APPEND INTO TABLE $tabla" >> "$output"
-    echo "FIELDS TERMINATED BY ',' TRAILING NULLCOLLS" >> "$output"
+    echo "FIELDS TERMINATED BY ','" >> "$output"
     echo "(" >> "$output"
+    
+    coma=""
     for tablaycol in $(cat tablacolumnas.csv); do
-       echo "$tablaycol" > /tmp/tablaycol
-       export IFS=","
-	for i in $(cat /tmp/tablaycol); do
+        echo "$tablaycol" > /tmp/tablaycol
+        export IFS=","
+	    for i in $(cat /tmp/tablaycol); do
             if [ "$i" = "$tabla" ]; then
                 for j in $(cat /tmp/tablaycol); do
                     if [ "$j" != "$tabla" ]; then
-                        echo "$j" >> "$output"
+			            echo -en "$coma" >> "$output"
+                        echo -n "$j" | sed 's/ /_/g' >> "$output"
+			            coma=",\n"
                     fi
                 done
             fi
         done
 	export IFS=$(echo -en "\n\b")
     done
+    echo "" >> "$output"
     echo ")" >> "$output"
 done
+```
+
+![ ](img/708.png)
+
+Una vez hecho los ficheros de control y los ficheros csv con los datos, lo único que resta es importar la base de datos.
+
+La sintaxis es la siguiente
+```
+sqlldr <user> CONTROL=<fichero>
+```
+
+
+
+
+Así que hagámoslo para todas las tablas:
+
+```
+echo tiger > pw.txt
+
+for i in $(ls | grep ".control"); do sqlldr scott CONTROL="$i" < pw.txt ;done
+
+rm pw.txt
+
 ```
