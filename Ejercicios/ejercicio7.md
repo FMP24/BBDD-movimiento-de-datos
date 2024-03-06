@@ -152,15 +152,16 @@ done
 
 Una vez hecho los ficheros de control y los ficheros csv con los datos, lo único que resta es importar la base de datos.
 
+Primero creamos las tablas correspondientes que sean necesarias, esto se tiene que hacer a mano.
+
+Despues, utilizamos sqlldr, la sintaxis es la siguiente:
+
 La sintaxis es la siguiente
 ```
 sqlldr <user> CONTROL=<fichero>
 ```
 
-
-
-
-Así que hagámoslo para todas las tablas:
+Así que importemos todas las tablas:
 
 ```
 echo tiger > pw.txt
