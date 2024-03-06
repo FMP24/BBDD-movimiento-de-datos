@@ -152,7 +152,22 @@ done
 
 Una vez hecho los ficheros de control y los ficheros csv con los datos, lo único que resta es importar la base de datos.
 
-Primero creamos las tablas correspondientes que sean necesarias, esto se tiene que hacer a mano.
+Primero creamos las tablas correspondientes que sean necesarias, esto se tiene que hacer a mano. Yo voy a hacerlo solo con una de las tablas, pero debajo dejaré el bucle for para hacerlo con todas.
+
+```
+CREATE TABLE staff_list (
+  ID NUMBER PRIMARY KEY,
+  name VARCHAR2(50) NOT NULL,
+  address VARCHAR2(200),
+  zip_code VARCHAR2(20),
+  phone VARCHAR2(20),
+  city VARCHAR2(50),
+  country VARCHAR2(50),
+  SID NUMBER
+);
+```
+![ ](img/709.png)
+
 
 Despues, utilizamos sqlldr, la sintaxis es la siguiente:
 
@@ -161,7 +176,7 @@ La sintaxis es la siguiente
 sqlldr <user> CONTROL=<fichero>
 ```
 
-Así que importemos todas las tablas:
+Así que, Con esta sentencia importaríamos todas las tablas:
 
 ```
 echo tiger > pw.txt
@@ -171,3 +186,11 @@ for i in $(ls | grep ".control"); do sqlldr scott CONTROL="$i" < pw.txt ;done
 rm pw.txt
 
 ```
+
+Para comprobar que el archivo de control funciona, voy a hacerlo solo con la tabla de antes:
+
+```
+sqlldr scott CONTROL=staff_list.control
+```
+
+![ ](img/710.png)
