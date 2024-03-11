@@ -42,7 +42,7 @@ expdp \'/ as sysdba\' \
 expdp \'/ as sysdba\' \
     SCHEMAS=SCOTT \
     CONTENT=ALL \
-    EXCLUDE=TABLE:\"BONUS\" \
+    EXCLUDE=TABLE:\"IN \(\'BONUS\'\)\" \
 .
 .
 .
@@ -59,7 +59,7 @@ NOTA: Si solo queremos hacer el análisis antes de hacer el data pump, usamos el
 expdp \'/ as sysdba\' \
     SCHEMAS=SCOTT \
     CONTENT=ALL \
-    EXCLUDE=TABLE:\"BONUS\" \
+    EXCLUDE=TABLE:\"IN \(\'BONUS\'\)\" \
     ESTIMATE=BLOCKS \
 .
 .
